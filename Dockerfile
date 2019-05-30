@@ -1,39 +1,26 @@
-FROM       node:10.11-alpine
-LABEL      maintainer="Sander Bel <sander@intelliops.be>"
+FROM node:alpine
 
-ARG        CRONICLE_VERSION='0.8.28'
+RUN apk add --no-cache git curl wget perl bash perl-pathtools tar \
+             procps tini g++ 
+			 
+RUN apk add --no-cache python3 python3-dev && \
+    python3 -m ensurepip && \
+    rm -r /usr/lib/python*/ensurepip && \
+    pip3 install --upgrade pip setuptools && \
+    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
+    if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
+    rm -r /root/.cache
+			 
+RUN curl -s https://raw.githubusercontent.com/jhuckaby/Cronicle/master/bin/install.js | node
+RUN pip install requests
 
-# Docker defaults
-ENV        CRONICLE_base_app_url 'http://localhost:3012'
-ENV        CRONICLE_WebServer__http_port 3012
-ENV        CRONICLE_WebServer__https_port 443
-ENV        CRONICLE_web_socket_use_hostnames 1
-ENV        CRONICLE_server_comm_use_hostnames 1
-ENV        CRONICLE_web_direct_connect 0
-ENV        CRONICLE_socket_io_transports '["polling", "websocket"]'
-
-RUN        apk add --no-cache git curl wget perl bash perl-pathtools tar \
-             procps tini
-
-RUN        adduser cronicle -D -h /opt/cronicle
-
-USER       cronicle
-
-WORKDIR    /opt/cronicle/
-
-RUN        mkdir -p data logs plugins
-
-RUN        curl -L "https://github.com/jhuckaby/Cronicle/archive/v${CRONICLE_VERSION}.tar.gz" | tar zxvf - --strip-components 1 && \
-           npm install && \
-           node bin/build.js dist
-
-ADD        entrypoint.sh /entrypoint.sh
+RUN     mkdir /app
+WORKDIR /app
+COPY    start.sh /start.sh
 
 EXPOSE     3012
 
-# data volume is also configured in entrypoint.sh
 VOLUME     ["/opt/cronicle/data", "/opt/cronicle/logs", "/opt/cronicle/plugins"]
 
-ENTRYPOINT ["/sbin/tini", "--"]
 
-CMD        ["sh", "/entrypoint.sh"]
+CMD        ["./start.sh"]
