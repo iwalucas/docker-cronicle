@@ -8,4 +8,4 @@ docker build -t cronicle .
 ```
 ## Run
 
-docker run -p 3012:3012 cronicle
+`docker run -p 3012:3012 cronicle`
