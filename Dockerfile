@@ -16,11 +16,11 @@ RUN pip install requests
 
 RUN     mkdir /app
 WORKDIR /app
-COPY    start.sh /start.sh
+COPY    entrypoint.sh /entrypoint.sh
 
 EXPOSE     3012
 
 VOLUME     ["/opt/cronicle/data", "/opt/cronicle/logs", "/opt/cronicle/plugins"]
 
 
-CMD        ["./start.sh"]
+CMD        ["./entrypoint.sh"]
