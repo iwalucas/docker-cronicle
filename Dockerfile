@@ -16,7 +16,7 @@ RUN pip install requests
 
 RUN     mkdir /app
 WORKDIR /app
-COPY    entrypoint.sh /entrypoint.sh
+COPY    entrypoint.sh /app/
 
 EXPOSE     3012
 
