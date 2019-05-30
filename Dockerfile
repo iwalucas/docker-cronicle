@@ -20,7 +20,8 @@ COPY    entrypoint.sh /app/
 
 EXPOSE     3012
 
-VOLUME     ["/opt/cronicle/data", "/opt/cronicle/logs", "/opt/cronicle/plugins"]
+#$(which docker):/usr/bin/docker to call for docker host inside the docker
+VOLUME     ["/opt/cronicle/data", "/opt/cronicle/logs", "/opt/cronicle/plugins","/usr/bin/docker","/var/run/docker.sock"]
 
 
-CMD        ["./entrypoint.sh"]
+ENTRYPOINT        ["./entrypoint.sh"]
