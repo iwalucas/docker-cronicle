@@ -8,6 +8,30 @@ LIB_DIR=$ROOT_DIR/lib
 DATA_DIR=$ROOT_DIR/data
 # PLUGINS_DIR needs to be the same as the exposed Docker volume in Dockerfile
 PLUGINS_DIR=$ROOT_DIR/plugins
+LOGS_DIR=$ROOT_DIR/logs
+
+if [ -f $LOGS_DIR/cronicled.pid ]
+then
+rm $LOGS_DIR/cronicled.pid
+fi
+
+#always be the master 
+#rm -rf $DATA_DIR/global
+#$BIN_DIR/control.sh setup
+
+
+#on docker swarm we need to fix hostname on server an servergroup
+/opt/cronicle/bin/storage-cli.js get global/servers/0 > servers.json
+/opt/cronicle/bin/storage-cli.js get global/server_groups/0 > sgroup.json
+
+./adjust_hostname.py
+
+cat servers.json | /opt/cronicle/bin/storage-cli.js put global/servers/0
+cat sgroup.json | /opt/cronicle/bin/storage-cli.js put global/server_groups/0
+
+
+
+
 
 
 # The env variables below are needed for Docker and cannot be overwritten
@@ -37,4 +61,5 @@ then
 fi
 
 # Run cronicle
-/usr/local/bin/node "$LIB_DIR/main.js"
+#/usr/local/bin/node "$LIB_DIR/main.js"
+/opt/cronicle/bin/control.sh start

@@ -20,11 +20,15 @@ RUN pip install requests
 RUN     mkdir /app
 WORKDIR /app
 COPY    entrypoint.sh /app/
+#this will fix the hostnames for docker
+COPY    adjust_hostname.py /app/
 
 EXPOSE     3012
 
 #$(which docker):/usr/bin/docker to call for docker host inside the docker
-#VOLUME     ["/opt/cronicle/data", "/opt/cronicle/logs", "/opt/cronicle/plugins"]
+VOLUME     ["/opt/cronicle/data", "/opt/cronicle/logs", "/opt/cronicle/plugins"]
 
 
-ENTRYPOINT        ["./entrypoint.sh"]
+
+
+CMD        ["./entrypoint.sh"]
