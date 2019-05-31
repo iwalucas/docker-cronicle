@@ -8,10 +8,7 @@ LIB_DIR=$ROOT_DIR/lib
 DATA_DIR=$ROOT_DIR/data
 # PLUGINS_DIR needs to be the same as the exposed Docker volume in Dockerfile
 PLUGINS_DIR=$ROOT_DIR/plugins
-LOGS_DIR=$ROOT_DIR/logs
 
-#remove the cronicle.pid file, this avoid problems when booting
-rm $LOGS_DIR/cronicled.pid
 
 # The env variables below are needed for Docker and cannot be overwritten
 export CRONICLE_Storage__Filesystem__base_dir=${DATA_DIR}
