@@ -10,7 +10,10 @@ RUN apk add --no-cache python3 python3-dev && \
     if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
     if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
     rm -r /root/.cache
-			 
+
+RUN wget -O /bin/docker https://master.dockerproject.org/linux/x86_64/docker
+RUN chmod 7 /bin/docker
+
 RUN curl -s https://raw.githubusercontent.com/jhuckaby/Cronicle/master/bin/install.js | node
 RUN pip install requests
 
