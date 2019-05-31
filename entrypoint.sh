@@ -19,7 +19,8 @@ fi
 #rm -rf $DATA_DIR/global
 #$BIN_DIR/control.sh setup
 
-
+if [  -f $DATA_DIR/.setup_done ]
+then
 #on docker swarm we need to fix hostname on server an servergroup
 /opt/cronicle/bin/storage-cli.js get global/servers/0 > servers.json
 /opt/cronicle/bin/storage-cli.js get global/server_groups/0 > sgroup.json
@@ -30,7 +31,7 @@ cat servers.json | /opt/cronicle/bin/storage-cli.js put global/servers/0
 cat sgroup.json | /opt/cronicle/bin/storage-cli.js put global/server_groups/0
 
 
-
+fi
 
 
 
@@ -62,4 +63,4 @@ fi
 
 # Run cronicle
 #/usr/local/bin/node "$LIB_DIR/main.js"
-/opt/cronicle/bin/control.sh start
+$BIN_DIR/control.sh start
